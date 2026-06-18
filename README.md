@@ -83,7 +83,8 @@ solana-tx-sre/
 │   └── verify-against-docs.md
 ├── examples/
 │   ├── reliability-audit-report.md  # sample /reliability-audit output
-│   └── diagnose-tx-session.md       # sample /diagnose-tx transcripts
+│   ├── diagnose-tx-session.md       # sample /diagnose-tx transcripts
+│   └── validation-live-mainnet.md   # engine run against real failed mainnet txs
 ├── verify/                      # CI type-check harness — every TS snippet compiles
 │   └── snippets/*.ts            # mirrors of the skill's code, checked by tsc
 ├── .github/workflows/ci.yml     # tsc --noEmit + install.sh smoke test
