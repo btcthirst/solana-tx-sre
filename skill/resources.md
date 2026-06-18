@@ -34,6 +34,16 @@ MCP already in the kit) before relying on them.
 - Real-data measurement → `skill/measuring-reliability.md`
 - Playbooks (per-error runbooks) → `playbooks/`
 
+## Client SDKs (2026 stack)
+
+- **`@solana/kit`** — the current preferred Solana client; the kit favours it for
+  client/RPC code. Code samples in this skill use `@solana/web3.js` v1 for stability
+  and ubiquity, but the *methodology* is SDK-agnostic and maps directly to
+  `@solana/kit`. Confirm exact method names via the solana-dev MCP.
+- **`@solana/web3.js`** — still widely deployed; the reference snippets target it.
+- **`@solana/web3-compat`** — the bridge when crossing between legacy and kit code.
+- **Helius SDK / RPC** — for `getPriorityFeeEstimate`, enhanced transactions, Sender.
+
 ## A note on accuracy
 
 This skill encodes *methodology* (how to diagnose, measure, score, prescribe) that

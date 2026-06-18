@@ -35,6 +35,43 @@ Map urgency to a percentile and let the value float with the network:
 **Always cap.** A max CU price protects you from a momentary network spike turning
 one tx into a catastrophic fee. The cap is a circuit breaker, not a target.
 
+## Reference implementation
+
+> Verify exact request/response fields against the Helius Priority Fee API docs
+> (`skill/resources.md`) — treat the shape below as the documented method, not a
+> guarantee. **Always cap** the result.
+
+```ts
+const MAX_CU_PRICE = 1_000_000;   // microLamports/CU — tune to your worst-case tolerance
+
+// Account-scoped Helius estimate: pass the accounts your tx WRITES, not a global guess.
+async function getCuPriceHelius(
+  heliusRpcUrl: string,
+  writableAccounts: string[],                                   // base58 pubkeys
+  level: "Low" | "Medium" | "High" | "VeryHigh" = "Medium",
+): Promise<number> {
+  const res = await fetch(heliusRpcUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0", id: "1", method: "getPriorityFeeEstimate",
+      params: [{ accountKeys: writableAccounts, options: { priorityLevel: level } }],
+    }),
+  });
+  const { result } = await res.json();
+  return Math.min(Math.ceil(result.priorityFeeEstimate), MAX_CU_PRICE);
+}
+
+// Fallback without Helius: P75 over recent prioritization fees for the hot accounts.
+import { Connection, PublicKey } from "@solana/web3.js";
+async function getCuPriceP75(connection: Connection, writable: PublicKey[]): Promise<number> {
+  const fees = await connection.getRecentPrioritizationFees({ lockedWritableAccounts: writable });
+  const vals = fees.map((f) => f.prioritizationFee).sort((a, b) => a - b);
+  const p75 = vals[Math.floor(vals.length * 0.75)] ?? 0;
+  return Math.min(Math.max(p75, 1), MAX_CU_PRICE);
+}
+```
+
 ## Don't overpay (the other half of reliability)
 
 - Pair every price decision with a correctly-sized **CU limit**

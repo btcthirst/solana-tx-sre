@@ -73,6 +73,13 @@ Each playbook is keyed to a **real** Solana error and ends with a verification s
 | Sandwich / slippage protection (MEV, narrow scope) | `skill/sandwich-slippage.md` |
 | External docs & RPC references | `skill/resources.md` |
 
+### Commands, agent & examples
+- Commands: `/reliability-audit` (`commands/reliability-audit.md`), `/diagnose-tx`
+  (`commands/diagnose-tx.md`), `/optimize-fees` (`commands/optimize-fees.md`).
+- Agent persona: `agents/tx-sre-engineer.md`.
+- Worked output samples: `examples/reliability-audit-report.md`,
+  `examples/diagnose-tx-session.md` — match their shape and anti-slop discipline.
+
 ## Operating rules
 
 1. **Lead with the diagnosis, not the lecture.** First line of your answer names

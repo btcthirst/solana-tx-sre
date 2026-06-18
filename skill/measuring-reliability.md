@@ -64,6 +64,36 @@ Fee-efficiency (last 500 confirmed):
   est. monthly waste ........ <attempts × overpay × CU> — show the arithmetic
 ```
 
+## Reference implementation
+
+```ts
+import { Connection, PublicKey } from "@solana/web3.js";
+
+// On-chain failure buckets. NOTE: stale-blockhash / dropped txs usually never land,
+// so they do NOT appear here — count those from client-side send logs (caveat above).
+async function onChainFailureBuckets(connection: Connection, signer: PublicKey, limit = 500) {
+  const sigs = await connection.getSignaturesForAddress(signer, { limit });
+  const buckets: Record<string, number> = {};
+  let confirmed = 0;
+
+  for (const s of sigs) {
+    if (!s.err) { confirmed++; continue; }
+    const ie = (s.err as any)?.InstructionError?.[1];
+    let key = "other";
+    if (ie?.Custom !== undefined) key = `custom_${ie.Custom}`;   // e.g. slippage guard (6001 → 0x1771)
+    else if (typeof ie === "string") key = ie;                  // e.g. "ComputeBudgetExceeded"
+    buckets[key] = (buckets[key] ?? 0) + 1;
+  }
+  return { onChainLandRate: confirmed / sigs.length, buckets, sampled: sigs.length };
+}
+
+// Fee-efficiency for one confirmed tx: microLamports/CU actually paid.
+function cuPricePaid(feeLamports: number, computeUnitsConsumed: number, signatures = 1): number {
+  const base = 5000 * signatures;                                // base fee per signature
+  return ((feeLamports - base) * 1_000_000) / computeUnitsConsumed;
+}
+```
+
 ## 4. Define an SLO (optional, the SRE move)
 
 Turn reliability into a target instead of a vibe:

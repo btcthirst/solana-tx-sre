@@ -39,6 +39,50 @@ Key points:
 - **Never** retry past `lastValidBlockHeight`. Retrying a dead tx is the classic
   `BlockhashNotFound` loop. → `playbooks/blockhash-not-found.md`
 
+## Reference implementation (web3.js v1)
+
+> Shown with `@solana/web3.js` v1 (stable, ubiquitous). On the 2026 stack
+> **`@solana/kit`** is the preferred client; the same methodology maps over — confirm
+> exact method names via the solana-dev MCP (`skill/resources.md`). `signed` is an
+> already-simulated, signed `VersionedTransaction` built with a fresh blockhash.
+
+```ts
+import { Connection, VersionedTransaction } from "@solana/web3.js";
+
+async function sendAndConfirm(
+  connection: Connection,
+  signed: VersionedTransaction,
+  lastValidBlockHeight: number,
+): Promise<string> {
+  const raw = signed.serialize();
+  const opts = { skipPreflight: true, maxRetries: 0 }; // already simulated; we own retries
+  const sig = await connection.sendRawTransaction(raw, opts);
+
+  while (true) {
+    const { value } = await connection.getSignatureStatuses([sig]);
+    const status = value[0];
+    if (status?.confirmationStatus === "confirmed" ||
+        status?.confirmationStatus === "finalized") {
+      if (status.err) throw new Error(`tx failed on-chain: ${JSON.stringify(status.err)}`);
+      return sig;                                            // landed
+    }
+    if (await connection.getBlockHeight("confirmed") > lastValidBlockHeight) {
+      throw new BlockhashExpiredError(sig);                  // dead → rebuild w/ fresh hash
+    }
+    await connection.sendRawTransaction(raw, opts);          // rebroadcast SAME signed tx
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+}
+
+class BlockhashExpiredError extends Error {
+  constructor(sig: string) { super(`blockhash expired before confirmation: ${sig}`); }
+}
+```
+
+Resending the same `raw` is idempotent — identical signature, so the network dedupes
+and it cannot double-execute. On `BlockhashExpiredError`, fetch a fresh blockhash,
+**resign**, and call again.
+
 ## Durable nonces (when 60–90s isn't enough)
 
 For flows that can't sign-and-send within the blockhash window — offline signing,

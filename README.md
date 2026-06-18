@@ -76,6 +76,9 @@ solana-tx-sre/
 │   └── optimize-fees.md         # /optimize-fees — tune fees & compute without overpaying
 ├── agents/
 │   └── tx-sre-engineer.md       # the SRE persona
+├── examples/
+│   ├── reliability-audit-report.md  # sample /reliability-audit output
+│   └── diagnose-tx-session.md       # sample /diagnose-tx transcripts
 ├── install.sh                   # non-interactive installer (defaults)
 ├── install-custom.sh            # interactive installer
 └── LICENSE                      # MIT

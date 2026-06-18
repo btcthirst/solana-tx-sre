@@ -37,6 +37,45 @@ limit ≈ ceil(unitsConsumed × 1.15)
 - **Limit set, price unset** → correctly bounded but no priority; drops under load.
   → `priority-fees.md`
 
+## Reference implementation (web3.js v1)
+
+```ts
+import {
+  ComputeBudgetProgram, Connection, TransactionMessage,
+  VersionedTransaction, TransactionInstruction, PublicKey,
+} from "@solana/web3.js";
+
+async function buildWithBudget(
+  connection: Connection,
+  payer: PublicKey,
+  ixs: TransactionInstruction[],
+  cuPriceMicroLamports: number,            // from priority-fees.md
+): Promise<VersionedTransaction> {
+  const { blockhash } = await connection.getLatestBlockhash("confirmed");
+
+  // 1. simulate to measure REAL consumption (see simulation.md)
+  const probe = new VersionedTransaction(new TransactionMessage({
+    payerKey: payer, recentBlockhash: blockhash, instructions: ixs,
+  }).compileToV0Message());
+  const sim = await connection.simulateTransaction(probe, { sigVerify: false });
+  if (sim.value.err) throw new Error(`sim failed: ${JSON.stringify(sim.value.err)}`);
+  const consumed = sim.value.unitsConsumed ?? 200_000;
+
+  // 2. size the limit with a ~15% margin (not 2× — that reintroduces waste)
+  const cuLimit = Math.min(Math.ceil(consumed * 1.15), 1_400_000); // respect the per-tx cap
+
+  // 3. prepend the budget instructions (cheap; they configure the tx)
+  return new VersionedTransaction(new TransactionMessage({
+    payerKey: payer, recentBlockhash: blockhash,
+    instructions: [
+      ComputeBudgetProgram.setComputeUnitLimit({ units: cuLimit }),
+      ComputeBudgetProgram.setComputeUnitPrice({ microLamports: cuPriceMicroLamports }),
+      ...ixs,
+    ],
+  }).compileToV0Message());
+}
+```
+
 ## Ordering & placement
 
 - Put the Compute Budget instructions **first** in the transaction; they configure
