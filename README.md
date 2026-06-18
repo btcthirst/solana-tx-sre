@@ -84,10 +84,25 @@ solana-tx-sre/
 ├── examples/
 │   ├── reliability-audit-report.md  # sample /reliability-audit output
 │   └── diagnose-tx-session.md       # sample /diagnose-tx transcripts
+├── verify/                      # CI type-check harness — every TS snippet compiles
+│   └── snippets/*.ts            # mirrors of the skill's code, checked by tsc
+├── .github/workflows/ci.yml     # tsc --noEmit + install.sh smoke test
 ├── install.sh                   # non-interactive installer (defaults)
 ├── install-custom.sh            # interactive installer
 └── LICENSE                      # MIT
 ```
+
+## Tested
+
+Not just prose. CI (`.github/workflows/ci.yml`) runs on every push/PR:
+
+- **`tsc --noEmit`** over `verify/snippets/*.ts` — every TypeScript snippet shown in
+  the skill is mirrored as a real module and **provably compiles** against
+  `@solana/web3.js`. Technical facts (150-slot blockhash validity, 200k CU/ix default,
+  1.4M CU/tx cap, 5000-lamport base fee, Helius `getPriorityFeeEstimate`, Jito
+  `sendBundle`/`getInflightBundleStatuses` + 1000-lamport tip floor) were verified
+  against live Solana / Helius / Jito docs.
+- **`install.sh` smoke test** — installs into a temp dir and asserts the layout.
 
 ## Example
 
