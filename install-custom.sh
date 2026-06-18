@@ -31,6 +31,7 @@ if $INSTALL_SKILL; then
   cp "$SCRIPT_DIR/SKILL.md" "$DEST/"
   cp -R "$SCRIPT_DIR/skill" "$DEST/"
   cp -R "$SCRIPT_DIR/playbooks" "$DEST/"
+  cp -R "$SCRIPT_DIR/rules" "$DEST/"
   echo "  ✓ skill      → $DEST"
 fi
 

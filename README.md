@@ -62,7 +62,8 @@ solana-tx-sre/
 │   ├── simulation.md            # pre-flight simulation & skipPreflight nuance
 │   ├── jito-fallback.md         # bundle fallback for congestion
 │   ├── sandwich-slippage.md     # MEV-as-reliability (narrow scope)
-│   └── resources.md             # external docs & accuracy note
+│   ├── transaction-size.md      # tx size limit, versioned tx & Address Lookup Tables
+│   └── resources.md             # external docs, SDK note & accuracy note
 ├── playbooks/                   # SRE runbooks keyed to real Solana errors
 │   ├── blockhash-not-found.md
 │   ├── transaction-dropped.md
@@ -76,6 +77,10 @@ solana-tx-sre/
 │   └── optimize-fees.md         # /optimize-fees — tune fees & compute without overpaying
 ├── agents/
 │   └── tx-sre-engineer.md       # the SRE persona
+├── rules/                       # enforceable operating rules
+│   ├── diagnosis-first.md
+│   ├── no-fabricated-numbers.md
+│   └── verify-against-docs.md
 ├── examples/
 │   ├── reliability-audit-report.md  # sample /reliability-audit output
 │   └── diagnose-tx-session.md       # sample /diagnose-tx transcripts

@@ -37,18 +37,23 @@ one tx into a catastrophic fee. The cap is a circuit breaker, not a target.
 
 ## Reference implementation
 
-> Verify exact request/response fields against the Helius Priority Fee API docs
-> (`skill/resources.md`) — treat the shape below as the documented method, not a
-> guarantee. **Always cap** the result.
+> In the kit, the **Helius MCP** exposes this estimate as a tool — prefer it; the raw
+> `fetch` below is shown for portability. Verify exact request/response fields against
+> the Helius Priority Fee API docs (`skill/resources.md`) — treat the shape below as
+> the documented method, not a guarantee. **Always cap** the result.
 
 ```ts
 const MAX_CU_PRICE = 1_000_000;   // microLamports/CU — tune to your worst-case tolerance
 
-// Account-scoped Helius estimate: pass the accounts your tx WRITES, not a global guess.
+// Helius priorityLevel ∈ Min | Low | Medium | High | VeryHigh | UnsafeMax.
+// You can pass `accountKeys` (the accounts your tx writes) OR a serialized
+// `transaction` (base58) — the latter scopes the estimate to the exact tx.
+type PriorityLevel = "Min" | "Low" | "Medium" | "High" | "VeryHigh" | "UnsafeMax";
+
 async function getCuPriceHelius(
   heliusRpcUrl: string,
-  writableAccounts: string[],                                   // base58 pubkeys
-  level: "Low" | "Medium" | "High" | "VeryHigh" = "Medium",
+  writableAccounts: string[],                                   // base58 pubkeys your tx writes
+  level: PriorityLevel = "Medium",
 ): Promise<number> {
   const res = await fetch(heliusRpcUrl, {
     method: "POST",
@@ -59,7 +64,7 @@ async function getCuPriceHelius(
     }),
   });
   const { result } = await res.json();
-  return Math.min(Math.ceil(result.priorityFeeEstimate), MAX_CU_PRICE);
+  return Math.min(Math.ceil(result.priorityFeeEstimate), MAX_CU_PRICE); // µLamports/CU
 }
 
 // Fallback without Helius: P75 over recent prioritization fees for the hot accounts.

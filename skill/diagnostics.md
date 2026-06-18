@@ -32,6 +32,7 @@ you look at their data — adjust it once you see logs/signatures.
 | Sent OK, but never "confirmed" in app | Confirmation tracking bug: blockhash already expired, or polling the wrong commitment | Medium | `playbooks/confirmation-timeout.md` |
 | Custom program error `0x1771` (and similar) | Slippage/guard tripped (e.g. Jupiter) — usually a *price moved* / MEV issue, not delivery | Medium | `skill/sandwich-slippage.md` |
 | "Land but cost a fortune" | Static or P99 fee, no CU-limit cap → overpaying | High | `skill/priority-fees.md` |
+| `Transaction too large` / encoding fails / "too many account locks" | Tx exceeds ~1,232 bytes — too many accounts for a legacy tx | High | `skill/transaction-size.md` |
 
 ## The systemic branch — "success rate is X%"
 

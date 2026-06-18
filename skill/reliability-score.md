@@ -23,6 +23,24 @@ partial, or zero points per control based on what you observe in the code or run
 | 7 | **Congestion fallback** | 10 | Has a Jito-bundle (or staked-connection / Sender) path for congested windows | No fallback; same path in all conditions |
 |   | **Total** | **100** | | |
 
+### Why these weights
+
+The weighting reflects **how directly each control moves the landing rate**, so the
+score's priority order matches real-world impact:
+
+- **Retry/rebroadcast (20)** and **Fee strategy (20)** — the two biggest levers. Most
+  failures are *delivery* (dropped/expired), and these two decide whether a tx is
+  resent within its window and priced to win contention.
+- **Compute budget (15)** and **Blockhash management (15)** — hard correctness gates:
+  get either wrong and the tx fails outright (CU exceeded) or dies (expired), no
+  matter how good the rest is.
+- **Simulation (10)**, **Confirmation tracking (10)**, **Congestion fallback (10)** —
+  high-value hygiene: they prevent wasted sends, surface true state, and add a second
+  channel under load, but a setup can still land most of the time without them.
+
+The numbers are a deliberate, fixed rubric — not tuned per audit — so two reviewers
+score the same setup the same way.
+
 ## Bands
 
 | Score | Band | Meaning |

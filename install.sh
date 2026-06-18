@@ -17,11 +17,12 @@ AGENTS_DIR="$CLAUDE_DIR/agents"
 
 echo "Installing $SKILL_NAME → $CLAUDE_DIR"
 
-# 1. Skill: SKILL.md + skill/ + playbooks/
+# 1. Skill: SKILL.md + skill/ + playbooks/ + rules/
 mkdir -p "$SKILLS_DIR"
 cp "$SCRIPT_DIR/SKILL.md" "$SKILLS_DIR/"
 cp -R "$SCRIPT_DIR/skill" "$SKILLS_DIR/"
 cp -R "$SCRIPT_DIR/playbooks" "$SKILLS_DIR/"
+cp -R "$SCRIPT_DIR/rules" "$SKILLS_DIR/"
 echo "  ✓ skill      → $SKILLS_DIR"
 
 # 2. Commands

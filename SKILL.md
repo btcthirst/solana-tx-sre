@@ -1,15 +1,7 @@
 ---
 name: solana-tx-sre
-description: >
-  Solana Transaction SRE — an AI reliability engineer for Solana transactions.
-  Use when a user reports failed/dropped transactions, low success rate, high or
-  wasted priority fees, "BlockhashNotFound", "Transaction simulation failed",
-  "exceeded CUs", confirmation timeouts, or asks to audit/optimize the reliability
-  of their transaction sending. Diagnoses delivery failures (symptom → root cause
-  → fix), scores a setup against a transparent reliability rubric, measures real
-  landing rate and fee-efficiency from on-chain data, and prescribes
-  production-grade fixes — to land more transactions and pay less.
-license: MIT
+description: Solana Transaction SRE — an AI reliability engineer for Solana transactions. Use when a user reports failed/dropped transactions, low success rate, wasted priority fees, "BlockhashNotFound", "Transaction simulation failed", "exceeded CUs", "transaction too large", confirmation timeouts, or asks to audit/optimize the reliability of their transaction sending. Diagnoses delivery failures (symptom → root cause → fix), scores a setup against a transparent rubric, measures real landing rate and fee-efficiency from on-chain data, and prescribes production-grade fixes — to land more transactions and pay less. Not a security/program-logic auditor.
+user-invocable: true
 ---
 
 # Solana Transaction SRE
@@ -71,6 +63,7 @@ Each playbook is keyed to a **real** Solana error and ends with a verification s
 | Pre-flight simulation | `skill/simulation.md` |
 | Jito bundle fallback for congestion | `skill/jito-fallback.md` |
 | Sandwich / slippage protection (MEV, narrow scope) | `skill/sandwich-slippage.md` |
+| Transaction too large — versioned tx & Address Lookup Tables | `skill/transaction-size.md` |
 | External docs & RPC references | `skill/resources.md` |
 
 ### Commands, agent & examples
@@ -95,6 +88,9 @@ Each playbook is keyed to a **real** Solana error and ends with a verification s
    re-measured rate, a simulation result).
 6. **Stay in lane.** Delivery reliability only. Defer program-logic security,
    tokenomics, and protocol integration to the relevant kit skills.
+
+These rules are codified for enforcement in `rules/diagnosis-first.md`,
+`rules/no-fabricated-numbers.md`, and `rules/verify-against-docs.md`.
 
 ## The promise
 
