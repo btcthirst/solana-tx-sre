@@ -96,6 +96,40 @@ nonce** instead of a recent blockhash:
 - Trade-off: extra account + the discipline that each nonce is single-use. Use only
   where longevity is actually needed; recent blockhash is simpler for live sends.
 
+```ts
+import {
+  Connection, Keypair, PublicKey, SystemProgram,
+  NonceAccount, NONCE_ACCOUNT_LENGTH, TransactionMessage, VersionedTransaction,
+} from "@solana/web3.js";
+
+// Per send: use the stored nonce as recentBlockhash and advance it as the FIRST ix.
+async function buildDurableTx(
+  connection: Connection,
+  noncePubkey: PublicKey,
+  nonceAuthority: PublicKey,
+  payer: PublicKey,
+  ixs: any[],                                  // your TransactionInstruction[]
+): Promise<VersionedTransaction> {
+  const info = await connection.getAccountInfo(noncePubkey);
+  const nonceAccount = NonceAccount.fromAccountData(info!.data);
+
+  const msg = new TransactionMessage({
+    payerKey: payer,
+    recentBlockhash: nonceAccount.nonce,        // ← the durable nonce, not a live blockhash
+    instructions: [
+      SystemProgram.nonceAdvance({ noncePubkey, authorizedPubkey: nonceAuthority }), // MUST be first
+      ...ixs,
+    ],
+  }).compileToV0Message();
+  return new VersionedTransaction(msg);         // valid until the nonce is advanced — no 150-slot deadline
+}
+
+// One-time setup: create + initialize the nonce account (owned by the System program).
+// rent = await connection.getMinimumBalanceForRentExemption(NONCE_ACCOUNT_LENGTH);
+// ixs: SystemProgram.createAccount({ space: NONCE_ACCOUNT_LENGTH, programId: SystemProgram.programId, ... })
+//      + SystemProgram.nonceInitialize({ noncePubkey, authorizedPubkey: nonceAuthority })
+```
+
 ## Verify
 
 After deploying the loop: `BlockhashNotFound` should vanish from your failure

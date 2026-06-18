@@ -11,8 +11,9 @@ next suspects.
 ## Procedure
 1. **Confirm it's the bundle, not the txs.** Each tx in the bundle must itself be
    valid (simulate them — `skill/simulation.md`). A bad tx sinks the whole bundle.
-2. **Size the tip from the live market**, not a hardcoded constant. Read the recent
-   tip levels and pay a competitive percentile for your urgency. Cap it.
+2. **Size the tip from the live market**, not a hardcoded constant. The floor is
+   **1,000 lamports**, but that's rarely competitive under load — pay a percentile for
+   your urgency, and cap it. → `skill/jito-fallback.md`
 3. **Pay to a current tip account.** Use a tip account from Jito's **live** list;
    stale/hardcoded addresses won't be recognised as tips. → `skill/resources.md`
 4. **Place the tip correctly.** Put the tip transfer in the bundle per Jito's
@@ -20,7 +21,8 @@ next suspects.
    the bundle.
 5. **Check region/endpoint.** Submitting to the wrong block-engine region adds
    latency that can cost you the slot. Use the appropriate endpoint.
-6. **Poll bundle status**, not just tx status, to see whether it was accepted.
+6. **Poll bundle status** (`getInflightBundleStatuses` → Invalid | Pending | Failed |
+   Landed), not just tx status, to see whether it was accepted.
 
 ## Verify
 Bundle status shows landed and the bundled txs' signatures appear on-chain. If
