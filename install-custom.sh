@@ -18,7 +18,7 @@ echo
 CLAUDE_DIR="$(prompt "Target config dir" "$HOME/.claude")"
 CLAUDE_DIR="${CLAUDE_DIR/#\~/$HOME}"
 
-INSTALL_SKILL=true;    yesno "Install skill (SKILL.md + skill/ + playbooks/)?" || INSTALL_SKILL=false
+INSTALL_SKILL=true;    yesno "Install skill (SKILL.md + skill/ + playbooks/ + rules/ + examples/)?" || INSTALL_SKILL=false
 INSTALL_COMMANDS=true; yesno "Install commands (/reliability-audit, /diagnose-tx, /optimize-fees)?" || INSTALL_COMMANDS=false
 INSTALL_AGENT=true;    yesno "Install agent (tx-sre-engineer)?" || INSTALL_AGENT=false
 
@@ -27,11 +27,13 @@ echo "Installing to: $CLAUDE_DIR"
 
 if $INSTALL_SKILL; then
   DEST="$CLAUDE_DIR/skills/$SKILL_NAME"
+  rm -rf "$DEST"   # clean reinstall — renamed/removed files don't linger
   mkdir -p "$DEST"
   cp "$SCRIPT_DIR/SKILL.md" "$DEST/"
   cp -R "$SCRIPT_DIR/skill" "$DEST/"
   cp -R "$SCRIPT_DIR/playbooks" "$DEST/"
   cp -R "$SCRIPT_DIR/rules" "$DEST/"
+  cp -R "$SCRIPT_DIR/examples" "$DEST/"
   echo "  ✓ skill      → $DEST"
 fi
 

@@ -74,6 +74,8 @@ to a real Solana error and ends with a verification step.
 - Agent persona: `agents/tx-sre-engineer.md`.
 - Worked output samples: `examples/reliability-audit-report.md`,
   `examples/diagnose-tx-session.md` — match their shape and anti-slop discipline.
+  `examples/validation-live-mainnet.md` shows the engine run against real failed
+  mainnet txs.
 
 ## Operating rules
 

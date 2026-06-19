@@ -2,8 +2,9 @@
 #
 # solana-tx-sre — non-interactive installer (all defaults)
 #
-# Installs the skill, commands, and agent into a Claude Code / Codex config dir.
-# Override the target with:  CLAUDE_DIR=~/.codex ./install.sh
+# Installs the skill, commands, and agent into a Claude Code config dir.
+# Override the target dir with:  CLAUDE_DIR=/path/to/config ./install.sh
+# (Codex support comes via the kit submodule, not this script — see README.)
 #
 set -euo pipefail
 
@@ -17,12 +18,14 @@ AGENTS_DIR="$CLAUDE_DIR/agents"
 
 echo "Installing $SKILL_NAME → $CLAUDE_DIR"
 
-# 1. Skill: SKILL.md + skill/ + playbooks/ + rules/
+# 1. Skill: SKILL.md + skill/ + playbooks/ + rules/ + examples/
+rm -rf "$SKILLS_DIR"   # clean reinstall — renamed/removed files don't linger
 mkdir -p "$SKILLS_DIR"
 cp "$SCRIPT_DIR/SKILL.md" "$SKILLS_DIR/"
 cp -R "$SCRIPT_DIR/skill" "$SKILLS_DIR/"
 cp -R "$SCRIPT_DIR/playbooks" "$SKILLS_DIR/"
 cp -R "$SCRIPT_DIR/rules" "$SKILLS_DIR/"
+cp -R "$SCRIPT_DIR/examples" "$SKILLS_DIR/"   # SKILL.md routes to these worked samples
 echo "  ✓ skill      → $SKILLS_DIR"
 
 # 2. Commands

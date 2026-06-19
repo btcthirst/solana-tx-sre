@@ -6,7 +6,7 @@ on:
 
 jobs:
   typecheck:
-    name: typecheck reference snippets
+    name: typecheck snippets extracted from skill/*.md
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -19,7 +19,7 @@ jobs:
           cache: npm
           cache-dependency-path: verify/package-lock.json
       - run: npm ci
-      - run: npm run typecheck
+      - run: npm run check   # extracts ```ts blocks from skill/*.md, then tsc --noEmit
 
   install-test:
     name: install.sh smoke test
@@ -34,6 +34,7 @@ jobs:
           test -f "$TMP/skills/solana-tx-sre/SKILL.md"
           test -d "$TMP/skills/solana-tx-sre/playbooks"
           test -d "$TMP/skills/solana-tx-sre/rules"
+          test -f "$TMP/skills/solana-tx-sre/examples/validation-live-mainnet.md"
           test -f "$TMP/commands/reliability-audit.md"
           test -f "$TMP/agents/tx-sre-engineer.md"
           test "$(find "$TMP" -name '*.md' | wc -l)" -ge 20

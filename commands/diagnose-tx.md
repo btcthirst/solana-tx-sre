@@ -5,8 +5,9 @@ argument-hint: "<signature | error string | pasted logs>"
 
 # /diagnose-tx
 
-Diagnose the transaction problem described in `$ARGUMENTS`. Load
-`skill/diagnostics.md` and run the core loop.
+Diagnose the transaction problem described in `$ARGUMENTS`. Load the solana-tx-sre
+skill's `skill/diagnostics.md` and run the core loop. (Paths below are relative to
+the installed skill root, `skills/solana-tx-sre/`.)
 
 ## Steps
 1. **Gather evidence.** If `$ARGUMENTS` is a signature, fetch it (`getTransaction` /

@@ -63,7 +63,7 @@ async function getCuPriceHelius(
       params: [{ accountKeys: writableAccounts, options: { priorityLevel: level } }],
     }),
   });
-  const { result } = await res.json();
+  const { result } = (await res.json()) as { result: { priorityFeeEstimate: number } };
   return Math.min(Math.ceil(result.priorityFeeEstimate), MAX_CU_PRICE); // µLamports/CU
 }
 
