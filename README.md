@@ -129,8 +129,11 @@ discipline is the point.
 
 ## Install
 
-Requires `bash` and `git`. Works with **Claude Code** and **Codex**-style agent
-configs that read `skills/`, `commands/`, and `agents/` directories.
+Requires `bash` and `git`. This is a **Claude Code** installer — it mirrors the
+reference [`solana-game-skill`](https://github.com/solanabr/solana-game-skill) shape,
+whose installer is likewise Claude-only. **Codex** support comes the way every kit
+skill gets it: by being submoduled into the Solana AI Kit, which handles the
+Claude/Codex wiring — not by this script.
 
 ```bash
 git clone https://github.com/btcthirst/solana-tx-sre.git
@@ -148,9 +151,9 @@ The installer copies:
 - `commands/*.md` → `~/.claude/commands/`
 - `agents/*.md` → `~/.claude/agents/`
 
-Set `CLAUDE_DIR` to override the target (e.g. `CLAUDE_DIR=~/.codex ./install.sh`).
-Pairs naturally with the kit's **Helius** and **solana-dev** MCP servers for live
-data.
+`CLAUDE_DIR` overrides the target directory (e.g. a non-default Claude config path);
+a direct Codex install path is not claimed here. Pairs naturally with the kit's
+**Helius** and **solana-dev** MCP servers for live data.
 
 ## Pairs with the kit
 
