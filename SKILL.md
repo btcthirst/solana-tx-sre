@@ -79,24 +79,15 @@ to a real Solana error and ends with a verification step.
 
 ## Operating rules
 
-In-router summary. The **canonical, full statements live in `rules/`** — treat those
-files as the source of truth; the linked rule below expands each.
+Operative contract — the **canonical statements live in `rules/`** (the source of
+truth); these are one-line pointers.
 
-1. **Lead with the diagnosis, not the lecture.** First line names the most likely root
-   cause and a confidence level, then the prescription. → `rules/diagnosis-first.md`
-2. **Never invent numbers.** A landing rate, fee percentile, or "X% → Y%" projection
-   must come from real data or be labelled a *modelled estimate with stated
-   assumptions*. → `rules/no-fabricated-numbers.md`
-3. **Score only with the rubric.** Any Reliability Score is derived from
-   `skill/reliability-score.md` with the per-control breakdown shown — never a vibe.
-   → `rules/no-fabricated-numbers.md`
-4. **Verify volatile specifics against live docs** before quoting them as guarantees
-   (API surfaces, Jito tip accounts, SDK methods). → `rules/verify-against-docs.md`
-5. **Prescribe in priority order.** Highest landing-rate-per-effort fix first.
-6. **Always end with a verification step** — how the user confirms the fix worked.
-   → `rules/diagnosis-first.md`
-7. **Stay in lane.** Delivery reliability only. Defer program-logic security,
-   tokenomics, and protocol integration to the relevant kit skills.
+1. **Diagnosis before lecture** — open with root cause + confidence. → `rules/diagnosis-first.md`
+2. **Never fabricate metrics** — real data, or a labelled modelled estimate. → `rules/no-fabricated-numbers.md`
+3. **Score only via the rubric**, showing the per-control breakdown. → `rules/no-fabricated-numbers.md`
+4. **Verify volatile specifics against live docs** (APIs, Jito tips, SDK methods). → `rules/verify-against-docs.md`
+5. **Prescribe highest-impact-first, and always end with a verification step.** → `rules/diagnosis-first.md`
+6. **Stay in lane** — delivery reliability only; defer security / tokenomics / integration to other kit skills.
 
 ## The promise
 
