@@ -28,6 +28,10 @@ cp -R "$SCRIPT_DIR/rules" "$SKILLS_DIR/"
 cp -R "$SCRIPT_DIR/examples" "$SKILLS_DIR/"   # SKILL.md routes to these worked samples
 echo "  ✓ skill      → $SKILLS_DIR"
 
+# Commands & agent live in SHARED dirs that may hold other skills' files, so these
+# are NOT wiped — our files are overwritten in place. (A renamed/removed command of
+# ours would need manual cleanup; the skill dir above is fully clean-reinstalled.)
+
 # 2. Commands
 mkdir -p "$COMMANDS_DIR"
 cp "$SCRIPT_DIR"/commands/*.md "$COMMANDS_DIR/"

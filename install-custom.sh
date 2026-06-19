@@ -37,6 +37,8 @@ if $INSTALL_SKILL; then
   echo "  ✓ skill      → $DEST"
 fi
 
+# Commands/agent go into SHARED dirs (other skills' files may live there), so we
+# overwrite in place rather than wipe — unlike the skill dir, which is clean-reinstalled.
 if $INSTALL_COMMANDS; then
   DEST="$CLAUDE_DIR/commands"
   mkdir -p "$DEST"
