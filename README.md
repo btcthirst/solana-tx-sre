@@ -133,7 +133,7 @@ Requires `bash` and `git`. Works with **Claude Code** and **Codex**-style agent
 configs that read `skills/`, `commands/`, and `agents/` directories.
 
 ```bash
-git clone https://github.com/<your-org>/solana-tx-sre.git
+git clone https://github.com/btcthirst/solana-tx-sre.git
 cd solana-tx-sre
 
 # non-interactive — installs skill + commands + agent into ~/.claude
