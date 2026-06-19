@@ -41,16 +41,18 @@ Load only what the task needs. Start from the symptom, not the table of contents
 | "Audit my setup" / a repo or code path | `commands/reliability-audit.md` + `skill/reliability-score.md` |
 | "Why is this fee so high?" / "am I overpaying?" | `skill/priority-fees.md` + `skill/measuring-reliability.md` |
 
-### 2. Known error → playbook (deterministic runbooks)
-Each playbook is keyed to a **real** Solana error and ends with a verification step.
-| Error / symptom | Playbook |
+### 2. Playbooks (deterministic runbooks)
+`skill/diagnostics.md` owns the canonical symptom → cause → playbook mapping — load it
+to route an error. This is just the **index** of runbooks it points to; each is keyed
+to a real Solana error and ends with a verification step.
+| Playbook | Covers |
 |---|---|
-| `BlockhashNotFound` / "blockhash not found" | `playbooks/blockhash-not-found.md` |
-| Tx never lands, no error, no signature status | `playbooks/transaction-dropped.md` |
-| "exceeded CUs" / "Computational budget exceeded" | `playbooks/compute-exceeded.md` |
-| `AccountInUse` / write-lock contention | `playbooks/account-in-use.md` |
-| Jito bundle never lands | `playbooks/jito-tip-too-low.md` |
-| Sent, but confirmation never arrives | `playbooks/confirmation-timeout.md` |
+| `playbooks/blockhash-not-found.md` | expired / stale blockhash |
+| `playbooks/transaction-dropped.md` | dropped before inclusion (no status) |
+| `playbooks/compute-exceeded.md` | compute budget exceeded |
+| `playbooks/account-in-use.md` | write-lock contention on a hot account |
+| `playbooks/jito-tip-too-low.md` | bundle never lands |
+| `playbooks/confirmation-timeout.md` | sent but never confirmed |
 
 ### 3. Topic deep-dives (the "how" behind a prescription)
 | Topic | File |
@@ -75,22 +77,24 @@ Each playbook is keyed to a **real** Solana error and ends with a verification s
 
 ## Operating rules
 
-1. **Lead with the diagnosis, not the lecture.** First line of your answer names
-   the most likely root cause and a confidence level. Then the prescription.
-2. **Never invent numbers.** A landing rate, fee percentile, or "X% → Y%"
-   projection must come from on-chain data (see `measuring-reliability.md`) or be
-   labelled as a *modelled estimate with stated assumptions*. A fabricated precise
-   percentage is the failure mode to avoid.
-3. **Score only with the rubric.** Any Reliability Score must be derived from
-   `skill/reliability-score.md` and the per-control breakdown shown — never a vibe.
-4. **Prescribe in priority order.** Highest landing-rate-per-effort fix first.
-5. **Verify.** Every fix ends with how to confirm it worked (a status check, a
-   re-measured rate, a simulation result).
-6. **Stay in lane.** Delivery reliability only. Defer program-logic security,
-   tokenomics, and protocol integration to the relevant kit skills.
+In-router summary. The **canonical, full statements live in `rules/`** — treat those
+files as the source of truth; the linked rule below expands each.
 
-These rules are codified for enforcement in `rules/diagnosis-first.md`,
-`rules/no-fabricated-numbers.md`, and `rules/verify-against-docs.md`.
+1. **Lead with the diagnosis, not the lecture.** First line names the most likely root
+   cause and a confidence level, then the prescription. → `rules/diagnosis-first.md`
+2. **Never invent numbers.** A landing rate, fee percentile, or "X% → Y%" projection
+   must come from real data or be labelled a *modelled estimate with stated
+   assumptions*. → `rules/no-fabricated-numbers.md`
+3. **Score only with the rubric.** Any Reliability Score is derived from
+   `skill/reliability-score.md` with the per-control breakdown shown — never a vibe.
+   → `rules/no-fabricated-numbers.md`
+4. **Verify volatile specifics against live docs** before quoting them as guarantees
+   (API surfaces, Jito tip accounts, SDK methods). → `rules/verify-against-docs.md`
+5. **Prescribe in priority order.** Highest landing-rate-per-effort fix first.
+6. **Always end with a verification step** — how the user confirms the fix worked.
+   → `rules/diagnosis-first.md`
+7. **Stay in lane.** Delivery reliability only. Defer program-logic security,
+   tokenomics, and protocol integration to the relevant kit skills.
 
 ## The promise
 
