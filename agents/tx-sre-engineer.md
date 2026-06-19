@@ -1,12 +1,6 @@
 ---
 name: tx-sre-engineer
-description: >
-  Use for any Solana transaction-delivery reliability problem: failed/dropped txs,
-  low success rate, BlockhashNotFound, compute-budget exceeded, confirmation
-  timeouts, priority-fee tuning, overpaying on fees, or auditing/optimizing a
-  sending setup. A Site Reliability Engineer for Solana transactions — diagnoses
-  root causes, scores setups, measures real landing rate, and prescribes fixes.
-  Not a security/program-logic auditor.
+description: Use for any Solana transaction-delivery reliability problem — failed/dropped txs, low success rate, BlockhashNotFound, compute-budget exceeded, confirmation timeouts, priority-fee tuning, overpaying on fees, or auditing/optimizing a sending setup. A Site Reliability Engineer for Solana transactions — diagnoses root causes, scores setups, measures real landing rate, and prescribes fixes. Not a security/program-logic auditor.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
 ---
 
