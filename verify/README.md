@@ -1,24 +1,32 @@
-# verify/ — type-check harness
+# verify/ — type-check harness (single-source)
 
-Every TypeScript snippet shown in the skill (`skill/*.md`) is mirrored here as a real,
-compilable module and type-checked against `@solana/web3.js` in CI. This is how the
-skill backs its "tested, accurate" claim: the reference code provably compiles.
+The TypeScript shown in the skill is **not** copied here by hand. `npm run check`
+extracts every ` ```ts ` block straight out of `skill/*.md` into `generated/` and
+type-checks *those* against `@solana/web3.js`. So the artifact CI compiles is the
+exact prose the model reads — there is no second copy to drift from.
 
 ```bash
 cd verify
 npm install
-npm run typecheck   # tsc --noEmit
+npm run check        # extract from skill/*.md → generated/ , then tsc --noEmit
 ```
 
-| Snippet file | Mirrors |
-|---|---|
-| `snippets/send-and-confirm.ts` | `skill/retry-and-blockhash.md` (rebroadcast loop) |
-| `snippets/durable-nonce.ts` | `skill/retry-and-blockhash.md` (durable nonce) |
-| `snippets/compute-budget.ts` | `skill/compute-budget.md` |
-| `snippets/priority-fees.ts` | `skill/priority-fees.md` |
-| `snippets/measuring.ts` | `skill/measuring-reliability.md` |
-| `snippets/jito-bundle.ts` | `skill/jito-fallback.md` |
-| `snippets/transaction-size.ts` | `skill/transaction-size.md` |
+- `npm run extract`   — regenerate `generated/` from `skill/*.md`
+- `npm run typecheck` — `tsc --noEmit` over `generated/`
+- `npm run check`     — both, in order (what CI runs)
 
-> Not installed by `install.sh` — this directory exists only to prove the snippets
-> type-check. Keep the snippets here in sync with the prose if either changes.
+`generated/` is git-ignored — it is a build artifact, rebuilt on every run. Edit the
+code in the `.md` file; never edit `generated/`. A block that stops compiling fails
+CI, which means the skill can no longer ship code that doesn't type-check.
+
+| Source block (in `skill/`)        | Covers |
+|---|---|
+| `compute-budget.md`               | CU limit sizing from simulation |
+| `priority-fees.md`                | Helius estimate + `getRecentPrioritizationFees` P75 |
+| `retry-and-blockhash.md` (×2)     | rebroadcast loop + durable nonce |
+| `measuring-reliability.md`        | on-chain failure buckets + fee-efficiency |
+| `jito-fallback.md`                | bundle submit/poll |
+| `transaction-size.md`             | versioned tx + Address Lookup Tables |
+
+> Not installed by `install.sh` — this directory exists only to prove the shipped
+> snippets type-check.

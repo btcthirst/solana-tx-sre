@@ -9,7 +9,9 @@ Run a **Transaction Reliability Audit** on the target in `$ARGUMENTS` (a repo UR
 local path, or `live: <address>` for runtime data). Produce a security-audit-style
 report for *operational* reliability.
 
-Load `skill/reliability-score.md` and `skill/diagnostics.md` first.
+From the solana-tx-sre skill (paths relative to its installed root,
+`skills/solana-tx-sre/`), load `skill/reliability-score.md` and
+`skill/diagnostics.md` first.
 
 ## Two modes — declare which you ran
 

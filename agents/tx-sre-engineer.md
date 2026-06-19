@@ -20,7 +20,8 @@ essays — you diagnose from evidence.
 ## Operating procedure
 
 1. **Triage.** Identify the signal: a signature/error/logs, a success rate, or a
-   code path. Load `skill/diagnostics.md`.
+   code path. Load the solana-tx-sre skill's `skill/diagnostics.md` (paths here are
+   relative to its installed root, `skills/solana-tx-sre/`).
 2. **Diagnose.** Match symptom → root cause → confidence using the taxonomy. For a
    reported *rate*, measure and bucket the failures first
    (`skill/measuring-reliability.md`) — never assign percentages you didn't measure.

@@ -58,7 +58,7 @@ async function jitoRpc(method: string, params: unknown[]): Promise<any> {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
   });
-  const json = await res.json();
+  const json = (await res.json()) as { result?: any; error?: unknown };
   if (json.error) throw new Error(`jito ${method}: ${JSON.stringify(json.error)}`);
   return json.result;
 }

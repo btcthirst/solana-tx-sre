@@ -2,10 +2,12 @@
   "name": "solana-tx-sre-verify",
   "private": true,
   "version": "0.0.0",
-  "description": "Type-check harness for solana-tx-sre reference snippets. Ensures every TS snippet shown in the skill compiles against @solana/web3.js. CI-only; not part of the installed skill.",
+  "description": "Type-check harness for solana-tx-sre. Extracts the TS blocks straight out of skill/*.md and compiles them, so the shipped prose itself is the tested artifact. CI-only; not part of the installed skill.",
   "license": "MIT",
   "scripts": {
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "extract": "node scripts/extract-snippets.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "check": "npm run extract && npm run typecheck"
   },
   "devDependencies": {
     "@solana/web3.js": "^1.95.3",

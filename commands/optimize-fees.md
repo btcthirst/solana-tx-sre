@@ -6,8 +6,9 @@ argument-hint: "[code path | 'live: <wallet>' | description of the tx]"
 # /optimize-fees
 
 Optimise the fee + compute setup for `$ARGUMENTS` to **land reliably and stop
-overpaying**. Load `skill/priority-fees.md`, `skill/compute-budget.md`, and
-`skill/measuring-reliability.md`.
+overpaying**. From the solana-tx-sre skill (paths relative to its installed root,
+`skills/solana-tx-sre/`), load `skill/priority-fees.md`, `skill/compute-budget.md`,
+and `skill/measuring-reliability.md`.
 
 ## Steps
 1. **Size the CU limit** from simulation (`unitsConsumed × ~1.15`). Flag an unset

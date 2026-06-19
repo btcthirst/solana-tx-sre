@@ -85,9 +85,9 @@ solana-tx-sre/
 │   ├── reliability-audit-report.md  # sample /reliability-audit output
 │   ├── diagnose-tx-session.md       # sample /diagnose-tx transcripts
 │   └── validation-live-mainnet.md   # engine run against real failed mainnet txs
-├── verify/                      # CI type-check harness — every TS snippet compiles
-│   └── snippets/*.ts            # mirrors of the skill's code, checked by tsc
-├── .github/workflows/ci.yml     # tsc --noEmit + install.sh smoke test
+├── verify/                      # CI type-check harness — single-source, no mirrors
+│   └── scripts/extract-snippets.mjs  # pulls ```ts blocks from skill/*.md → generated/, tsc checks those
+├── .github/workflows/ci.yml     # extract+tsc --noEmit + install.sh smoke test
 ├── install.sh                   # non-interactive installer (defaults)
 ├── install-custom.sh            # interactive installer
 └── LICENSE                      # MIT
@@ -97,9 +97,11 @@ solana-tx-sre/
 
 Not just prose. CI (`.github/workflows/ci.yml`) runs on every push/PR:
 
-- **`tsc --noEmit`** over `verify/snippets/*.ts` — every TypeScript snippet shown in
-  the skill is mirrored as a real module and **provably compiles** against
-  `@solana/web3.js`. Technical facts (150-slot blockhash validity, 200k CU/ix default,
+- **`tsc --noEmit`** over code **extracted straight from `skill/*.md`** — CI pulls
+  every ` ```ts ` block out of the skill files into `verify/generated/` and compiles
+  *those*, so the exact prose shipped to the model **provably compiles** against
+  `@solana/web3.js`. There is no hand-maintained mirror to drift from. Technical facts
+  (150-slot blockhash validity, 200k CU/ix default,
   1.4M CU/tx cap, 5000-lamport base fee, Helius `getPriorityFeeEstimate`, Jito
   `sendBundle`/`getInflightBundleStatuses` + 1000-lamport tip floor) were verified
   against live Solana / Helius / Jito docs.
@@ -147,7 +149,7 @@ cd solana-tx-sre
 ```
 
 The installer copies:
-- `SKILL.md` + `skill/` + `playbooks/` → `~/.claude/skills/solana-tx-sre/`
+- `SKILL.md` + `skill/` + `playbooks/` + `rules/` + `examples/` → `~/.claude/skills/solana-tx-sre/`
 - `commands/*.md` → `~/.claude/commands/`
 - `agents/*.md` → `~/.claude/agents/`
 
