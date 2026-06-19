@@ -27,6 +27,7 @@ echo "Installing to: $CLAUDE_DIR"
 
 if $INSTALL_SKILL; then
   DEST="$CLAUDE_DIR/skills/$SKILL_NAME"
+  rm -rf "$DEST"   # clean reinstall — renamed/removed files don't linger
   mkdir -p "$DEST"
   cp "$SCRIPT_DIR/SKILL.md" "$DEST/"
   cp -R "$SCRIPT_DIR/skill" "$DEST/"
